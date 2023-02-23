@@ -30,7 +30,12 @@ fn setup(
     mut materials: ResMut<Assets<StandardMaterial>>,
     asset_server: Res<AssetServer>,
 ) {
-    commands.spawn(Collider::cuboid(5.0, 0.001, 5.0));
+    commands.spawn(Collider::cuboid(4.0, 0.001, 2.5));
+
+    commands.spawn(Collider::cuboid(4.0, 0.001, 2.5))
+    .insert(TransformBundle::from(Transform::from_xyz(0.0, 0.0, -4.0).with_rotation(Quat::from_rotation_x(0.279253))));
+
+    //commands.spawn(Transform::from_translation(Vec3::new(0.0, 0.25, 0.0))).insert(Collider::cuboid(2.0, 0.001, 1.0));
 
     //Spawn map
     {

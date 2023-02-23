@@ -111,7 +111,7 @@ fn player_move(
                     KeyCode::D => velocity += right,
                     KeyCode::Space => {
                         if let Some((_entity, _toi)) = rapier_context.cast_ray(
-                            transform.translation, Vec3::new(0.0, -1.0, 0.0), 0.25, true, QueryFilter::only_fixed()
+                            transform.translation, Vec3::new(0.0, -1.0, 0.0), 0.35, true, QueryFilter::only_fixed()
                         ) {
                             object_velocity.linvel.y = 5.0;
                         }
