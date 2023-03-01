@@ -125,7 +125,7 @@ fn player_move(
             velocity = velocity.normalize_or_zero();
 
             let mut current_velocity = object_velocity.linvel;
-            current_velocity.y *= 0.25;
+            current_velocity.y = 0.0;
             if current_velocity.length_squared() < target_speed {
                 object_velocity.linvel += velocity * time.delta_seconds() * 100.0;
             }
