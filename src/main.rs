@@ -21,7 +21,7 @@ fn main() {
 }
 
 #[derive(Component)]
-pub struct MapHitbox;
+pub struct MapCollider;
 
 /// set up a simple 3D scene
 fn setup(
@@ -30,13 +30,6 @@ fn setup(
     mut materials: ResMut<Assets<StandardMaterial>>,
     asset_server: Res<AssetServer>,
 ) {
-    commands.spawn(Collider::cuboid(4.0, 0.001, 2.5));
-
-    commands.spawn(Collider::cuboid(4.0, 0.001, 2.5))
-    .insert(TransformBundle::from(Transform::from_xyz(0.0, 0.0, -4.0).with_rotation(Quat::from_rotation_x(0.279253))));
-
-    //commands.spawn(Transform::from_translation(Vec3::new(0.0, 0.25, 0.0))).insert(Collider::cuboid(2.0, 0.001, 1.0));
-
     //Spawn map
     {
         commands.spawn(SceneBundle {
@@ -56,12 +49,37 @@ fn setup(
     player_character::spawn_player(commands, meshes, materials);
 }
 
-fn generate_hitbox(
-    mut query: Query<&Handle<Scene>, With<MapHitbox>>,
-    scenes: ResMut<Assets<Scene>>,
-    meshes: ResMut<Assets<Mesh>>,
-) {
-    for scene in query.iter() {
-        let scene = scenes.get(scene).unwrap();
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
+pub struct CubeCollider {
+    pub origin: [f32; 3],
+    pub rotation: [f32; 3],
+
+    pub size_x: f32,
+    pub size_y: f32,
+    pub size_z: f32,
+}
+
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
+pub struct MapBounds {
+    cube_colliders: Vec<CubeCollider>,
+}
+
+fn generate_hitbox(mut commands: Commands) {
+    let map_bounds = MapBounds {
+        cube_colliders: vec![CubeCollider {
+            origin: [0.0, 0.0, 0.0],
+            rotation: [0.0, 0.0, 0.0],
+            size_x: 4.0,
+            size_y: 0.001,
+            size_z: 2.5,
+        }],
+    };
+
+    for cube_collider in map_bounds.cube_colliders {
+        commands
+        .spawn(Collider::cuboid(cube_collider.size_x, cube_collider.size_y, cube_collider.size_z))
+        .insert(TransformBundle::from(
+            Transform::from_xyz(cube_collider.origin[0], cube_collider.origin[1], cube_collider.origin[2]).with_rotation(Quat::from_scaled_axis(Vec3::new(cube_collider.rotation[0], cube_collider.rotation[1], cube_collider.rotation[2]))),
+        )).insert(MapCollider);
     }
 }
