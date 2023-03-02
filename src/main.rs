@@ -16,34 +16,32 @@ fn main() {
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(PlayerCharacterPlugin)
         .add_startup_system(setup)
-        .add_system(generate_hitbox)
+        .add_system(reload_map_system)
         .run();
 }
 
 #[derive(Component)]
 pub struct MapCollider;
 
+#[derive(Component)]
+pub struct MapObject;
+
 /// set up a simple 3D scene
 fn setup(
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
+    meshes: ResMut<Assets<Mesh>>,
+    materials: ResMut<Assets<StandardMaterial>>,
     asset_server: Res<AssetServer>,
 ) {
     //Spawn map
     {
-        commands.spawn(SceneBundle {
-            scene: asset_server.load("test_map.glb#Scene0"),
-            ..default()
-        });
-
-        /*commands
-        .spawn(SceneBundle {
-            scene: asset_server.load("test_map_bounds.glb#Scene0"),
-            visibility: Visibility::VISIBLE,
-            ..default()
-        })
-        .insert(MapHitbox);*/
+        commands
+            .spawn(SceneBundle {
+                scene: asset_server.load("Map.glb#Scene0"),
+                ..default()
+            })
+            .insert(MapObject);
+        generate_map(&mut commands, &asset_server);
     }
 
     player_character::spawn_player(commands, meshes, materials);
@@ -60,26 +58,65 @@ pub struct CubeCollider {
 }
 
 #[derive(serde::Serialize, serde::Deserialize, Debug)]
-pub struct MapBounds {
+pub struct MapInformation {
     cube_colliders: Vec<CubeCollider>,
 }
 
-fn generate_hitbox(mut commands: Commands) {
-    let map_bounds = MapBounds {
-        cube_colliders: vec![CubeCollider {
-            origin: [0.0, 0.0, 0.0],
-            rotation: [0.0, 0.0, 0.0],
-            size_x: 4.0,
-            size_y: 0.001,
-            size_z: 2.5,
-        }],
-    };
+fn generate_map(commands: &mut Commands, asset_server: &Res<AssetServer>) {
+    /*commands
+    .spawn(SceneBundle {
+        scene: asset_server.load("Map.glb#Scene0"),
+        ..default()
+    })
+    .insert(MapObject);*/
 
-    for cube_collider in map_bounds.cube_colliders {
+    let contents = std::fs::read_to_string("assets/Map_information.json")
+    .expect("Should have been able to read the file");
+    let map_info: MapInformation = serde_json::from_str(&contents).unwrap();
+
+    for cube_collider in map_info.cube_colliders {
         commands
-        .spawn(Collider::cuboid(cube_collider.size_x, cube_collider.size_y, cube_collider.size_z))
-        .insert(TransformBundle::from(
-            Transform::from_xyz(cube_collider.origin[0], cube_collider.origin[1], cube_collider.origin[2]).with_rotation(Quat::from_scaled_axis(Vec3::new(cube_collider.rotation[0], cube_collider.rotation[1], cube_collider.rotation[2]))),
-        )).insert(MapCollider);
+            .spawn(Collider::cuboid(
+                cube_collider.size_x,
+                cube_collider.size_y,
+                cube_collider.size_z,
+            ))
+            .insert(TransformBundle::from(
+                Transform::from_xyz(
+                    cube_collider.origin[0],
+                    cube_collider.origin[1],
+                    cube_collider.origin[2],
+                )
+                .with_rotation(Quat::from_scaled_axis(Vec3::new(
+                    cube_collider.rotation[0],
+                    cube_collider.rotation[1],
+                    cube_collider.rotation[2],
+                ))),
+            ))
+            .insert(MapCollider);
+    }
+}
+
+fn reload_map_system(
+    mut commands: Commands,
+    collider_query: Query<Entity, With<MapCollider>>,
+    //object_query: Query<Entity, (With<MapObject>, Without<MapCollider>)>,
+    keys: Res<Input<KeyCode>>,
+    asset_server: Res<AssetServer>,
+) {
+    for key in keys.get_pressed() {
+        if *key == KeyCode::R {
+            for map_collider_entity in collider_query.iter() {
+                commands.entity(map_collider_entity).despawn();
+            }
+
+            /*for map_object_entity in object_query.iter() {
+                commands.entity(map_object_entity).despawn();
+            }*/
+
+            generate_map(&mut commands, &asset_server);
+
+            println!("Reloaded map");
+        }
     }
 }
