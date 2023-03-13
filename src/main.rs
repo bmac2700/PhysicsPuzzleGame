@@ -4,13 +4,12 @@ use bevy_rapier3d::prelude::*;
 mod player_character;
 use crate::player_character::PlayerCharacterPlugin;
 
+#[bevy_main]
 fn main() {
     App::new()
-        .insert_resource(Msaa { samples: 1 })
         .add_plugins(DefaultPlugins)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .insert_resource(RapierConfiguration {
-            gravity: Vec3::new(0.0, -14.0, 0.0),
             ..Default::default()
         })
         .add_plugin(RapierDebugRenderPlugin::default())
@@ -71,7 +70,7 @@ fn generate_map(commands: &mut Commands, asset_server: &Res<AssetServer>) {
     .insert(MapObject);*/
 
     let contents = std::fs::read_to_string("assets/Map_information.json")
-    .expect("Should have been able to read the file");
+        .expect("Should have been able to read the file");
     let map_info: MapInformation = serde_json::from_str(&contents).unwrap();
 
     for cube_collider in map_info.cube_colliders {
@@ -96,7 +95,6 @@ fn generate_map(commands: &mut Commands, asset_server: &Res<AssetServer>) {
             .insert(MapCollider);
     }
 }
-
 fn reload_map_system(
     mut commands: Commands,
     collider_query: Query<Entity, With<MapCollider>>,
