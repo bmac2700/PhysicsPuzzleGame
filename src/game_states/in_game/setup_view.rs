@@ -24,8 +24,8 @@ pub fn setup_view(
     windows: Query<&Window>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut post_processing_materials: ResMut<Assets<PostProcessingMaterial>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
     mut images: ResMut<Assets<Image>>,
+    asset_server: Res<AssetServer>,
 ) {
     let window = windows.single();
 
@@ -57,26 +57,11 @@ pub fn setup_view(
 
     let image_handle = images.add(image);
 
-    let cube_handle = meshes.add(Mesh::from(shape::Cube { size: 4.0 }));
-    let cube_material_handle = materials.add(StandardMaterial {
-        base_color: Color::rgb(1.0, 0.0, 0.0),
-        reflectance: 0.02,
-        unlit: false,
+    commands.spawn(SceneBundle {
+        scene: asset_server.load("models/Characters/CameraMan/CameraMan.glb#Scene0"),
+        transform: Transform::from_scale(Vec3::new(5.0, 5.0, 5.0)),
         ..default()
-    });
-
-    // The cube that will be rendered to the texture.
-    commands
-        .spawn((
-            PbrBundle {
-                mesh: cube_handle,
-                material: cube_material_handle,
-                transform: Transform::from_translation(Vec3::new(0.0, 0.0, 1.0)),
-                ..default()
-            },
-            MainCube,
-        ))
-        .insert(InGameEntity);
+    }).insert(MainCube).insert(InGameEntity);
 
     // Light
     // NOTE: Currently lights are ignoring render layers - see https://github.com/bevyengine/bevy/issues/3462
@@ -120,7 +105,7 @@ pub fn setup_view(
     // This material has the texture that has been rendered.
     let material_handle = post_processing_materials.add(PostProcessingMaterial {
         source_image: image_handle,
-        wash_color: 2.0,
+        wash_color: 3.0,
     });
 
     // Post processing 2d quad, with material using the render texture done by the main camera, with a custom shader.
