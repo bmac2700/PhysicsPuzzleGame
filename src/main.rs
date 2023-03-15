@@ -1,120 +1,68 @@
-use bevy::prelude::*;
-use bevy_rapier3d::prelude::*;
+use bevy::{prelude::*, sprite::Material2dPlugin};
+use game_states::{
+    in_game::{ui::pause_menu::PauseMenuData, GamePauseEvent, InGameState},
+    AppState,
+};
+use post_processing::PostProcessingMaterial;
 
-mod player_character;
-use crate::player_character::PlayerCharacterPlugin;
+mod game_states;
+mod post_processing;
 
 #[bevy_main]
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
-        .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
-        .insert_resource(RapierConfiguration {
-            ..Default::default()
-        })
-        .add_plugin(RapierDebugRenderPlugin::default())
-        .add_plugin(PlayerCharacterPlugin)
-        .add_startup_system(setup)
-        .add_system(reload_map_system)
-        .run();
-}
-
-#[derive(Component)]
-pub struct MapCollider;
-
-#[derive(Component)]
-pub struct MapObject;
-
-/// set up a simple 3D scene
-fn setup(
-    mut commands: Commands,
-    meshes: ResMut<Assets<Mesh>>,
-    materials: ResMut<Assets<StandardMaterial>>,
-    asset_server: Res<AssetServer>,
-) {
-    //Spawn map
-    {
-        commands
-            .spawn(SceneBundle {
-                scene: asset_server.load("Map.glb#Scene0"),
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                title: "Bowen's handyman service".into(),
+                // Tells wasm to resize the window according to the available canvas
+                fit_canvas_to_parent: true,
+                // Tells wasm not to override default event handling, like F5, Ctrl+R etc.
+                prevent_default_event_handling: false,
                 ..default()
-            })
-            .insert(MapObject);
-        generate_map(&mut commands, &asset_server);
-    }
-
-    player_character::spawn_player(commands, meshes, materials);
-}
-
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
-pub struct CubeCollider {
-    pub origin: [f32; 3],
-    pub rotation: [f32; 3],
-
-    pub size_x: f32,
-    pub size_y: f32,
-    pub size_z: f32,
-}
-
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
-pub struct MapInformation {
-    cube_colliders: Vec<CubeCollider>,
-}
-
-fn generate_map(commands: &mut Commands, asset_server: &Res<AssetServer>) {
-    /*commands
-    .spawn(SceneBundle {
-        scene: asset_server.load("Map.glb#Scene0"),
-        ..default()
-    })
-    .insert(MapObject);*/
-
-    let contents = std::fs::read_to_string("assets/Map_information.json")
-        .expect("Should have been able to read the file");
-    let map_info: MapInformation = serde_json::from_str(&contents).unwrap();
-
-    for cube_collider in map_info.cube_colliders {
-        commands
-            .spawn(Collider::cuboid(
-                cube_collider.size_x,
-                cube_collider.size_y,
-                cube_collider.size_z,
-            ))
-            .insert(TransformBundle::from(
-                Transform::from_xyz(
-                    cube_collider.origin[0],
-                    cube_collider.origin[1],
-                    cube_collider.origin[2],
-                )
-                .with_rotation(Quat::from_scaled_axis(Vec3::new(
-                    cube_collider.rotation[0],
-                    cube_collider.rotation[1],
-                    cube_collider.rotation[2],
-                ))),
-            ))
-            .insert(MapCollider);
-    }
-}
-fn reload_map_system(
-    mut commands: Commands,
-    collider_query: Query<Entity, With<MapCollider>>,
-    //object_query: Query<Entity, (With<MapObject>, Without<MapCollider>)>,
-    keys: Res<Input<KeyCode>>,
-    asset_server: Res<AssetServer>,
-) {
-    for key in keys.get_pressed() {
-        if *key == KeyCode::R {
-            for map_collider_entity in collider_query.iter() {
-                commands.entity(map_collider_entity).despawn();
-            }
-
-            /*for map_object_entity in object_query.iter() {
-                commands.entity(map_object_entity).despawn();
-            }*/
-
-            generate_map(&mut commands, &asset_server);
-
-            println!("Reloaded map");
-        }
-    }
+            }),
+            ..default()
+        }))
+        .add_state::<AppState>()
+        .add_event::<GamePauseEvent>()
+        .insert_resource(InGameState::Running)
+        .insert_resource(PauseMenuData::default())
+        .add_plugin(Material2dPlugin::<PostProcessingMaterial>::default())
+        .add_system(game_states::menu::setup_camera.on_startup())
+        //MainMenu
+        .add_system(
+            game_states::menu::main_menu::setup_menu.in_schedule(OnEnter(AppState::MainMenu)),
+        )
+        .add_system(game_states::menu::main_menu::menu_input.in_set(OnUpdate(AppState::MainMenu)))
+        .add_system(game_states::menu::setup_camera.in_schedule(OnExit(AppState::InGame)))
+        .add_system(
+            game_states::menu::main_menu::cleanup_menu.in_schedule(OnExit(AppState::MainMenu)),
+        )
+        //Options menu
+        .add_system(
+            game_states::menu::options_menu::setup_menu.in_schedule(OnEnter(AppState::OptionsMenu)),
+        )
+        .add_system(
+            game_states::menu::options_menu::menu_input.in_set(OnUpdate(AppState::OptionsMenu)),
+        )
+        .add_system(
+            game_states::menu::options_menu::cleanup_menu
+                .in_schedule(OnExit(AppState::OptionsMenu)),
+        )
+        //InGame
+        .add_system(game_states::menu::remove_camera.in_schedule(OnEnter(AppState::InGame)))
+        .add_system(game_states::in_game::setup_view.in_schedule(OnEnter(AppState::InGame)))
+        .add_system(
+            game_states::in_game::main_camera_cube_rotator_system
+                .in_set(OnUpdate(AppState::InGame)),
+        )
+        .add_system(game_states::in_game::game_pause.in_set(OnUpdate(AppState::InGame)))
+        .add_system(
+            game_states::in_game::ui::pause_menu::setup_pause_menu
+                .in_set(OnUpdate(AppState::InGame)),
+        )
+        .add_system(
+            game_states::in_game::ui::pause_menu::handle_pause_menu_input
+                .in_set(OnUpdate(AppState::InGame)),
+        )
+        .run();
 }
