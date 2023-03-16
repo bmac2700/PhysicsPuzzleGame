@@ -1,4 +1,5 @@
 use bevy::{prelude::*, sprite::Material2dPlugin};
+use bevy_rapier3d::prelude::*;
 use game_states::{
     in_game::{ui::pause_menu::PauseMenuData, GamePauseEvent, InGameState},
     AppState,
@@ -22,6 +23,8 @@ fn main() {
             }),
             ..default()
         }))
+        .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
+        .add_plugin(RapierDebugRenderPlugin::default())
         .add_state::<AppState>()
         .add_event::<GamePauseEvent>()
         .insert_resource(InGameState::Running)
@@ -51,10 +54,6 @@ fn main() {
         //InGame
         .add_system(game_states::menu::remove_camera.in_schedule(OnEnter(AppState::InGame)))
         .add_system(game_states::in_game::setup_view.in_schedule(OnEnter(AppState::InGame)))
-        .add_system(
-            game_states::in_game::main_camera_cube_rotator_system
-                .in_set(OnUpdate(AppState::InGame)),
-        )
         .add_system(game_states::in_game::game_pause.in_set(OnUpdate(AppState::InGame)))
         .add_system(
             game_states::in_game::ui::pause_menu::setup_pause_menu

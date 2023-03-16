@@ -6,21 +6,11 @@ use crate::game_states::{
     AppState,
 };
 
-#[derive(Resource)]
+#[derive(Resource, Default)]
 pub struct PauseMenuData {
     menu_area: Option<Entity>,
     back_to_menu_button: Option<Entity>,
     resume_button: Option<Entity>,
-}
-
-impl Default for PauseMenuData {
-    fn default() -> Self {
-        Self {
-            menu_area: None,
-            back_to_menu_button: None,
-            resume_button: None,
-        }
-    }
 }
 
 pub fn setup_pause_menu(
@@ -150,9 +140,9 @@ pub fn setup_pause_menu(
                 })
                 .id();
 
-            (*pause_menu_data).back_to_menu_button = Some(back_to_menu_button);
-            (*pause_menu_data).menu_area = Some(menu_area);
-            (*pause_menu_data).resume_button = Some(resume_button);
+            pause_menu_data.back_to_menu_button = Some(back_to_menu_button);
+            pause_menu_data.menu_area = Some(menu_area);
+            pause_menu_data.resume_button = Some(resume_button);
         }
 
         if *event == GamePauseEvent::Unpause {

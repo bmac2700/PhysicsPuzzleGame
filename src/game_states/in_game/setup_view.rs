@@ -12,9 +12,11 @@ use bevy::{
     sprite::MaterialMesh2dBundle,
 };
 
+use bevy_rapier3d::prelude::*;
+
 use crate::post_processing::PostProcessingMaterial;
 
-use super::{InGameEntity, InGameState};
+use super::InGameEntity;
 
 #[derive(Component)]
 pub struct MainCube;
@@ -60,11 +62,18 @@ pub fn setup_view(
     commands
         .spawn(SceneBundle {
             scene: asset_server.load("models/Characters/CameraMan/CameraMan.glb#Scene0"),
-            transform: Transform::from_scale(Vec3::new(5.0, 5.0, 5.0)),
+            transform: Transform::from_scale(Vec3::new(5.0, 5.0, 5.0))
+                .with_translation(Vec3::new(0.0, 5.0, 0.0)),
             ..default()
         })
-        .insert(MainCube)
-        .insert(InGameEntity);
+        .insert(InGameEntity)
+        .insert(Collider::ball(1.0))
+        .insert(Velocity::angular(Vec3::new(0.0, 5.0, 0.0)))
+        .insert(RigidBody::Dynamic);
+
+    commands
+        .spawn(Collider::cuboid(100.0, 0.1, 100.0))
+        .insert(TransformBundle::from(Transform::from_xyz(0.0, -2.0, 0.0)));
 
     // Light
     // NOTE: Currently lights are ignoring render layers - see https://github.com/bevyengine/bevy/issues/3462
@@ -141,19 +150,4 @@ pub fn setup_view(
             post_processing_pass_layer,
         ))
         .insert(InGameEntity);
-}
-
-pub fn main_camera_cube_rotator_system(
-    ingame_state: Res<InGameState>,
-    time: Res<Time>,
-    mut query: Query<&mut Transform, With<MainCube>>,
-) {
-    if *ingame_state != InGameState::Running {
-        return;
-    }
-
-    for mut transform in &mut query {
-        transform.rotate_x(0.55 * time.delta_seconds());
-        transform.rotate_z(0.15 * time.delta_seconds());
-    }
 }
