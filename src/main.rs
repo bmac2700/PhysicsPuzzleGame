@@ -31,6 +31,8 @@ fn main() {
         .insert_resource(PauseMenuData::default())
         .add_plugin(Material2dPlugin::<PostProcessingMaterial>::default())
         .add_system(game_states::menu::setup_camera.on_startup())
+        .add_system(game_states::in_game::setup_camera_resources.on_startup())
+        .add_system(game_states::in_game::update_main_camera_data)
         //MainMenu
         .add_system(
             game_states::menu::main_menu::setup_menu.in_schedule(OnEnter(AppState::MainMenu)),
@@ -53,7 +55,7 @@ fn main() {
         )
         //InGame
         .add_system(game_states::menu::remove_camera.in_schedule(OnEnter(AppState::InGame)))
-        .add_system(game_states::in_game::setup_view.in_schedule(OnEnter(AppState::InGame)))
+        .add_system(game_states::in_game::setup_camera.in_schedule(OnEnter(AppState::InGame)))
         .add_system(game_states::in_game::game_pause.in_set(OnUpdate(AppState::InGame)))
         .add_system(
             game_states::in_game::ui::pause_menu::setup_pause_menu
@@ -63,5 +65,6 @@ fn main() {
             game_states::in_game::ui::pause_menu::handle_pause_menu_input
                 .in_set(OnUpdate(AppState::InGame)),
         )
+        .add_system(game_states::in_game::create_camera.in_schedule(OnEnter(AppState::InGame)))
         .run();
 }
