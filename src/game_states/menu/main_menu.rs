@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, window::CursorGrabMode};
 
 use crate::game_states::AppState;
 
@@ -202,13 +202,18 @@ pub fn menu_input(
         (&Interaction, &mut BackgroundColor, &ButtonData),
         (Changed<Interaction>, With<Button>, With<ButtonData>),
     >,
+    mut windows: Query<&mut Window>,
 ) {
+    let mut window = windows.single_mut();
+
     for (interaction, mut color, button_data) in &mut interaction_query {
         match *interaction {
             Interaction::Clicked => {
                 *color = PRESSED_BUTTON.into();
                 if button_data.button_id == 0 {
                     next_state.set(AppState::InGame);
+                    window.cursor.grab_mode = CursorGrabMode::Locked;
+                    window.cursor.visible = false;
                 }
 
                 if button_data.button_id == 1 {

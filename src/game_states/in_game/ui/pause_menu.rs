@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, window::CursorGrabMode};
 
 use crate::game_states::{
     in_game::{GamePauseEvent, InGameEntity, InGameState},
@@ -180,7 +180,10 @@ pub fn handle_pause_menu_input(
     >,
     entity_query: Query<Entity, With<InGameEntity>>,
     mut pause_menu_data: ResMut<PauseMenuData>,
+    mut windows: Query<&mut Window>,
 ) {
+    let mut window = windows.single_mut();
+
     if *ingame_state == InGameState::Paused {
         for (interaction, mut color, button_data) in &mut interaction_query {
             match *interaction {
@@ -199,6 +202,8 @@ pub fn handle_pause_menu_input(
                     if button_data.button_id == 1 {
                         *ingame_state = InGameState::Running;
                         game_pause.send(GamePauseEvent::Unpause);
+                        window.cursor.grab_mode = CursorGrabMode::Locked;
+                        window.cursor.visible = false;
                     }
                 }
                 Interaction::Hovered => {

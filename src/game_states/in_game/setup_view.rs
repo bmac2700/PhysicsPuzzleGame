@@ -2,6 +2,10 @@ use bevy::{
     core_pipeline::clear_color::ClearColorConfig, prelude::*, render::camera::RenderTarget,
 };
 
+use bevy_rapier3d::prelude::*;
+
+use crate::components::player::PlayerBody;
+
 use super::{InGameEntity, MainCameraData};
 
 pub fn create_camera(
@@ -31,10 +35,20 @@ pub fn create_camera(
         ))
         .insert(InGameEntity);
 
-    commands.spawn(PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
-        material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
-        transform: Transform::from_xyz(0.0, 0.5, 0.0),
-        ..default()
-    });
+    commands
+        .spawn(PbrBundle {
+            mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
+            material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
+            transform: Transform::from_xyz(0.0, 0.5, 0.0),
+            ..default()
+        })
+        .insert(InGameEntity)
+        .insert(Collider::cuboid(1.0, 1.0, 1.0))
+        .insert(PlayerBody);
+
+    commands
+        .spawn(RigidBody::Dynamic)
+        .insert(Collider::ball(0.5))
+        .insert(Restitution::coefficient(0.7))
+        .insert(TransformBundle::from(Transform::from_xyz(0.0, 4.0, 0.0)));
 }
