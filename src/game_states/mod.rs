@@ -10,5 +10,4 @@ pub enum AppState {
     OptionsMenu,
 
     InGame,
-    Paused,
 }
