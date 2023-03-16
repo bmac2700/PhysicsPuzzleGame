@@ -64,6 +64,7 @@ pub fn menu_input(
         (&Interaction, &mut BackgroundColor),
         (Changed<Interaction>, With<Button>),
     >,
+    keyboard_input: Res<Input<KeyCode>>,
 ) {
     for (interaction, mut color) in &mut interaction_query {
         match *interaction {
@@ -78,5 +79,9 @@ pub fn menu_input(
                 *color = NORMAL_BUTTON.into();
             }
         }
+    }
+
+    if keyboard_input.just_pressed(KeyCode::Escape) {
+        next_state.set(AppState::MainMenu);
     }
 }

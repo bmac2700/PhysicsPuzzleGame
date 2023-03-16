@@ -57,11 +57,14 @@ pub fn setup_view(
 
     let image_handle = images.add(image);
 
-    commands.spawn(SceneBundle {
-        scene: asset_server.load("models/Characters/CameraMan/CameraMan.glb#Scene0"),
-        transform: Transform::from_scale(Vec3::new(5.0, 5.0, 5.0)),
-        ..default()
-    }).insert(MainCube).insert(InGameEntity);
+    commands
+        .spawn(SceneBundle {
+            scene: asset_server.load("models/Characters/CameraMan/CameraMan.glb#Scene0"),
+            transform: Transform::from_scale(Vec3::new(5.0, 5.0, 5.0)),
+            ..default()
+        })
+        .insert(MainCube)
+        .insert(InGameEntity);
 
     // Light
     // NOTE: Currently lights are ignoring render layers - see https://github.com/bevyengine/bevy/issues/3462
