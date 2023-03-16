@@ -4,6 +4,8 @@ use crate::game_states::AppState;
 
 use super::{ButtonData, HOVERED_BUTTON, NORMAL_BUTTON, PRESSED_BUTTON};
 
+use bevy_rapier3d::prelude::*;
+
 #[derive(Resource)]
 pub struct MainMenuData {
     play_button_entity: Entity,
@@ -203,6 +205,7 @@ pub fn menu_input(
         (Changed<Interaction>, With<Button>, With<ButtonData>),
     >,
     mut windows: Query<&mut Window>,
+    mut rapier_configuration: ResMut<RapierConfiguration>,
 ) {
     let mut window = windows.single_mut();
 
@@ -214,6 +217,7 @@ pub fn menu_input(
                     next_state.set(AppState::InGame);
                     window.cursor.grab_mode = CursorGrabMode::Locked;
                     window.cursor.visible = false;
+                    rapier_configuration.physics_pipeline_active = true;
                 }
 
                 if button_data.button_id == 1 {

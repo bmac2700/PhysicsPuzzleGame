@@ -6,6 +6,8 @@ use crate::game_states::{
     AppState,
 };
 
+use bevy_rapier3d::prelude::*;
+
 #[derive(Resource, Default)]
 pub struct PauseMenuData {
     menu_area: Option<Entity>,
@@ -181,6 +183,7 @@ pub fn handle_pause_menu_input(
     entity_query: Query<Entity, With<InGameEntity>>,
     mut pause_menu_data: ResMut<PauseMenuData>,
     mut windows: Query<&mut Window>,
+    mut rapier_configuration: ResMut<RapierConfiguration>,
 ) {
     let mut window = windows.single_mut();
 
@@ -204,6 +207,7 @@ pub fn handle_pause_menu_input(
                         game_pause.send(GamePauseEvent::Unpause);
                         window.cursor.grab_mode = CursorGrabMode::Locked;
                         window.cursor.visible = false;
+                        rapier_configuration.physics_pipeline_active = true;
                     }
                 }
                 Interaction::Hovered => {

@@ -34,15 +34,17 @@ pub fn update_main_camera_data(
         ..default()
     };
 
-    if let Some(image) = images.get_mut(&main_camera_data.image_handle) {
+    if let Some(image) = images.get(&main_camera_data.image_handle) {
         if image.size() != Vec2::new(size.width as f32, size.height as f32) {
-            image.resize(size);
-            if let Some(mesh_handle) = &main_camera_data.mesh_handle {
-                if let Some(mesh) = meshes.get_mut(mesh_handle) {
-                    *mesh = Mesh::from(shape::Quad::new(Vec2::new(
-                        size.width as f32,
-                        size.height as f32,
-                    )));
+            if let Some(mut_image) = images.get_mut(&main_camera_data.image_handle) {
+                mut_image.resize(size);
+                if let Some(mesh_handle) = &main_camera_data.mesh_handle {
+                    if let Some(mesh) = meshes.get_mut(mesh_handle) {
+                        *mesh = Mesh::from(shape::Quad::new(Vec2::new(
+                            size.width as f32,
+                            size.height as f32,
+                        )));
+                    }
                 }
             }
         }

@@ -35,7 +35,9 @@ fn main() {
         .add_plugin(PlayerPlugin)
         .add_system(game_states::menu::setup_camera.on_startup())
         .add_system(game_states::in_game::setup_camera_resources.on_startup())
-        .add_system(game_states::in_game::update_main_camera_data)
+        .add_system(
+            game_states::in_game::update_main_camera_data.in_set(OnUpdate(AppState::InGame)),
+        )
         //MainMenu
         .add_system(
             game_states::menu::main_menu::setup_menu.in_schedule(OnEnter(AppState::MainMenu)),

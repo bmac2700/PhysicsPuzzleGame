@@ -46,9 +46,5 @@ pub fn create_camera(
         .insert(Collider::cuboid(1.0, 1.0, 1.0))
         .insert(PlayerBody);
 
-    commands
-        .spawn(RigidBody::Dynamic)
-        .insert(Collider::ball(0.5))
-        .insert(Restitution::coefficient(0.7))
-        .insert(TransformBundle::from(Transform::from_xyz(0.0, 4.0, 0.0)));
+    commands.spawn(Collider::cuboid(100.0, 0.1, 100.0)).insert(Transform::from_translation(Vec3::new(0.0, -2.5, 0.0)));
 }
