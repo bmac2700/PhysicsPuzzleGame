@@ -3,6 +3,8 @@ use bevy_rapier3d::prelude::*;
 
 use crate::game_states::in_game::InGameState;
 
+use super::{GROUND_DAMPING, GROUND_TOI, JUMP_FORCE, MOVEMENT_SPEED};
+
 #[derive(Component)]
 pub struct PlayerBody;
 
@@ -15,6 +17,8 @@ pub fn initialize_player_body(
             Without<RigidBody>,
             Without<Velocity>,
             Without<LockedAxes>,
+            Without<Damping>,
+            Without<GravityScale>,
         ),
     >,
 ) {
@@ -23,7 +27,9 @@ pub fn initialize_player_body(
             .entity(entity)
             .insert(RigidBody::Dynamic)
             .insert(Velocity::default())
-            .insert(LockedAxes::ROTATION_LOCKED);
+            .insert(LockedAxes::ROTATION_LOCKED)
+            .insert(Damping::default())
+            .insert(GravityScale(3.5));
     }
 }
 
@@ -31,7 +37,8 @@ pub fn player_movement(
     keyboard_input: Res<Input<KeyCode>>,
     time: Res<Time>,
     windows: Query<&mut Window>,
-    mut query: Query<(&Transform, &mut Velocity), (With<PlayerBody>, With<Velocity>)>,
+    mut query: Query<(&Transform, &mut Velocity, &mut Damping), (With<PlayerBody>, With<Velocity>)>,
+    rapier_context: Res<RapierContext>,
 
     ingame_state: Res<InGameState>,
 ) {
@@ -44,24 +51,73 @@ pub fn player_movement(
         return;
     }
 
-    let (player_transform, mut player_velocity) = match query.get_single_mut() {
+    let (player_transform, mut player_velocity, mut damping) = match query.get_single_mut() {
         Ok(v) => v,
         Err(_) => {
             return;
         }
     };
 
-    let local_z = player_transform.local_z();
+    let on_ground = rapier_context
+        .cast_ray(
+            player_transform.translation,
+            Vec3::NEG_Y,
+            GROUND_TOI,
+            true,
+            QueryFilter::only_fixed(),
+        )
+        .is_some();
 
-    let forward = -Vec3::new(local_z.x, 0.0, local_z.z);
-    //let right = Vec3::new(local_z.z, 0.0, -local_z.x);
+    if on_ground {
+        damping.linear_damping = GROUND_DAMPING;
+    } else {
+        damping.linear_damping = 0.0;
+    }
+
+    //Rotate the movement system by 180 degrees, because the player model is facing at us
+    let mut rotated_player_transform = *player_transform;
+    rotated_player_transform.rotate_local_y(3.141593);
+
+    let local_z = rotated_player_transform.local_z();
+
+    let forwardmove = -Vec3::new(local_z.x, 0.0, local_z.z);
+    let sidemove = Vec3::new(local_z.z, 0.0, -local_z.x);
 
     let mut new_velocity = Vec3::ZERO;
 
     if keyboard_input.pressed(KeyCode::W) {
-        new_velocity += forward;
+        new_velocity += forwardmove;
     }
 
+    if keyboard_input.pressed(KeyCode::S) {
+        new_velocity -= forwardmove;
+    }
+
+    if keyboard_input.pressed(KeyCode::A) {
+        new_velocity -= sidemove;
+    }
+
+    if keyboard_input.pressed(KeyCode::D) {
+        new_velocity += sidemove;
+    }
+
+    //WASD movement
     player_velocity.linvel += new_velocity * time.delta_seconds() * 100.0;
-    //println!("moving");
+
+    let flat_velocity = Vec3::new(player_velocity.linvel.x, 0.0, player_velocity.linvel.z);
+    if flat_velocity.length() > MOVEMENT_SPEED {
+        let mut limited_velocity = flat_velocity.normalize() * MOVEMENT_SPEED;
+        limited_velocity.y = player_velocity.linvel.y;
+
+        player_velocity.linvel = limited_velocity;
+    }
+
+    //Jump movement
+    if keyboard_input.just_pressed(KeyCode::Space) && on_ground {
+        player_velocity.linvel = Vec3::new(
+            player_velocity.linvel.x,
+            JUMP_FORCE,
+            player_velocity.linvel.z,
+        );
+    }
 }

@@ -3,14 +3,18 @@ use bevy::{ecs::event::ManualEventReader, input::mouse::MouseMotion, prelude::*}
 use crate::game_states::AppState;
 
 mod movement;
-
 pub use movement::PlayerBody;
+
+const GROUND_DAMPING: f32 = 5.0;
+const MOVEMENT_SPEED: f32 = 16.0;
+const GROUND_TOI: f32 = 7.5;
+const JUMP_FORCE: f32 = 13.0;
 
 #[derive(Resource, Default)]
 pub struct PlayerInputState {
-    reader_motion: ManualEventReader<MouseMotion>,
-    pitch: f32,
-    yaw: f32,
+    _reader_motion: ManualEventReader<MouseMotion>,
+    _pitch: f32,
+    _yaw: f32,
 }
 
 pub struct PlayerPlugin;
