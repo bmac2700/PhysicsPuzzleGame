@@ -1,10 +1,10 @@
 use bevy::{
-    core_pipeline::clear_color::ClearColorConfig, prelude::*, render::{camera::RenderTarget},
+    core_pipeline::clear_color::ClearColorConfig, prelude::*, render::camera::RenderTarget,
 };
 
 use bevy_rapier3d::prelude::*;
 
-use crate::components::player::{PlayerBody, PlayerCamera};
+use crate::components::player::{PlayerBody, PlayerCamera, PlayerModel};
 
 use super::{InGameEntity, MainCameraData};
 
@@ -14,9 +14,9 @@ pub fn create_camera(
     asset_server: Res<AssetServer>,
 ) {
     commands
-        .spawn(TransformBundle::from_transform(
-            Transform::from_translation(Vec3::new(0.0, 10.0, 0.0)),
-        ))
+        .spawn(SpatialBundle::from_transform(Transform::from_translation(
+            Vec3::new(0.0, 10.0, 0.0),
+        )))
         .insert((InGameEntity, PlayerBody))
         .with_children(|parent| {
             parent
@@ -37,7 +37,7 @@ pub fn create_camera(
                             target: RenderTarget::Image(main_camera_data.image_handle.clone()),
                             ..default()
                         },
-                        transform: Transform::from_translation(Vec3::new(0.0, 1.0, 0.0)),
+                        transform: Transform::from_translation(Vec3::new(0.0, 5.0, 0.0)),
                         ..default()
                     },
                     // Disable UI rendering for the first pass camera. This prevents double rendering of UI at
@@ -46,12 +46,14 @@ pub fn create_camera(
                 ))
                 .insert(PlayerCamera);
 
-            parent.spawn(SceneBundle {
-                scene: asset_server.load("models/Characters/CameraMan/CameraMan.glb#Scene0"),
-                transform: Transform::from_scale(Vec3::new(5.0, 5.0, 5.0))
-                    .with_translation(Vec3::new(0.0, 15.0, 0.0)),
-                ..default()
-            });
+            parent
+                .spawn(SceneBundle {
+                    scene: asset_server.load("models/Characters/CameraMan/CameraMan.glb#Scene0"),
+                    transform: Transform::from_scale(Vec3::new(5.0, 5.0, 5.0))
+                        .with_rotation(Quat::from_rotation_y(3.141593)),
+                    ..default()
+                })
+                .insert(PlayerModel);
         });
 
     commands

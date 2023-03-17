@@ -3,9 +3,11 @@ use bevy::{ecs::event::ManualEventReader, input::mouse::MouseMotion, prelude::*}
 use crate::game_states::AppState;
 
 mod look;
+mod model;
 mod movement;
 
 pub use look::PlayerCamera;
+pub use model::PlayerModel;
 pub use movement::PlayerBody;
 
 const GROUND_DAMPING: f32 = 5.0;
