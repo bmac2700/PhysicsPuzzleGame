@@ -74,11 +74,7 @@ pub fn player_movement(
         damping.linear_damping = 0.0;
     }
 
-    //Rotate the movement system by 180 degrees, because the player model is facing at us
-    let mut rotated_player_transform = *player_transform;
-    rotated_player_transform.rotate_local_y(3.141593);
-
-    let local_z = rotated_player_transform.local_z();
+    let local_z = player_transform.local_z();
 
     let forwardmove = -Vec3::new(local_z.x, 0.0, local_z.z);
     let sidemove = Vec3::new(local_z.z, 0.0, -local_z.x);
