@@ -4,7 +4,7 @@ use bevy::{
 
 use bevy_rapier3d::prelude::*;
 
-use crate::components::player::{PlayerBody, PlayerCamera, PlayerModel};
+use crate::components::player::{PickableObject, PlayerBody, PlayerCamera, PlayerModel};
 
 use super::{InGameEntity, MainCameraData};
 
@@ -12,6 +12,8 @@ pub fn create_camera(
     mut commands: Commands,
     main_camera_data: Res<MainCameraData>,
     asset_server: Res<AssetServer>,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     commands
         .spawn(SpatialBundle::from_transform(Transform::from_translation(
@@ -56,6 +58,21 @@ pub fn create_camera(
                 })
                 .insert(PlayerModel);
         });
+
+    commands
+        .spawn(PbrBundle {
+            mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
+            material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
+            transform: Transform::from_xyz(0.0, 0.5, 0.0),
+            ..default()
+        })
+        .insert(RigidBody::Dynamic)
+        .insert(Collider::cuboid(0.5, 0.5, 0.5))
+        .insert(Damping {
+            linear_damping: 5.0,
+            ..default()
+        })
+        .insert(PickableObject);
 
     commands
         .spawn(Collider::cuboid(100.0, 0.1, 100.0))
