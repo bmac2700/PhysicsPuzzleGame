@@ -3,7 +3,7 @@ use bevy_rapier3d::prelude::*;
 
 use crate::game_states::in_game::InGameState;
 
-use super::{GROUND_DAMPING, GROUND_TOI, JUMP_FORCE, MOVEMENT_SPEED};
+use super::{GROUND_DAMPING, GROUND_TOI, JUMP_FORCE, MOVEMENT_RUN_SPEED_BOOST, MOVEMENT_SPEED};
 
 #[derive(Component)]
 pub struct PlayerBody;
@@ -97,12 +97,21 @@ pub fn player_movement(
         new_velocity += sidemove;
     }
 
+    let target_speed = if keyboard_input.pressed(KeyCode::LShift) {
+        //Running speed
+        MOVEMENT_SPEED + MOVEMENT_RUN_SPEED_BOOST
+    } else {
+        //Walking speed
+        MOVEMENT_SPEED
+    };
+
     //WASD movement
-    player_velocity.linvel += new_velocity * time.delta_seconds() * 100.0;
+    player_velocity.linvel += new_velocity * time.delta_seconds() * 500.0;
 
     let flat_velocity = Vec3::new(player_velocity.linvel.x, 0.0, player_velocity.linvel.z);
-    if flat_velocity.length() > MOVEMENT_SPEED {
-        let mut limited_velocity = flat_velocity.normalize() * MOVEMENT_SPEED;
+
+    if flat_velocity.length() > target_speed {
+        let mut limited_velocity = flat_velocity.normalize() * target_speed;
         limited_velocity.y = player_velocity.linvel.y;
 
         player_velocity.linvel = limited_velocity;

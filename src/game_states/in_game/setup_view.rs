@@ -51,6 +51,7 @@ pub fn create_camera(
                     scene: asset_server.load("models/Characters/CameraMan/CameraMan.glb#Scene0"),
                     transform: Transform::from_scale(Vec3::new(5.0, 5.0, 5.0))
                         .with_rotation(Quat::from_rotation_y(3.141593)),
+                    visibility: Visibility::Hidden,
                     ..default()
                 })
                 .insert(PlayerModel);
