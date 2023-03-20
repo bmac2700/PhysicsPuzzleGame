@@ -57,8 +57,7 @@ pub fn handle_object_pickup(
     let start = player_body_transform.translation + player_camera_transform.translation;
     dir.y = player_camera_transform.forward().y;
 
-    let ray_cast =
-        rapier_context.cast_ray(start, dir, Real::MAX, false, QueryFilter::only_dynamic());
+    let ray_cast = rapier_context.cast_ray(start, dir, Real::MAX, false, QueryFilter::new().exclude_sensors());
 
     if let Some((entity, _)) = ray_cast {
         if keyboard_input.just_pressed(KeyCode::E)
