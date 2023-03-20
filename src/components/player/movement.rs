@@ -3,7 +3,10 @@ use bevy_rapier3d::prelude::*;
 
 use crate::game_states::in_game::InGameState;
 
-use super::{GROUND_DAMPING, GROUND_TOI, JUMP_FORCE, MOVEMENT_RUN_SPEED_BOOST, MOVEMENT_SPEED};
+use super::{
+    GROUND_DAMPING, GROUND_TOI, JUMP_FORCE, MOVEMENT_CROUCH_SPEED_BOOST, MOVEMENT_RUN_SPEED_BOOST,
+    MOVEMENT_SPEED, JUMP_GRAVITY,
+};
 
 #[derive(Component)]
 pub struct PlayerBody;
@@ -29,7 +32,7 @@ pub fn initialize_player_body(
             .insert(Velocity::default())
             .insert(LockedAxes::ROTATION_LOCKED)
             .insert(Damping::default())
-            .insert(GravityScale(3.5));
+            .insert(GravityScale(JUMP_GRAVITY));
     }
 }
 
@@ -64,14 +67,14 @@ pub fn player_movement(
             Vec3::NEG_Y,
             GROUND_TOI,
             true,
-            QueryFilter::only_fixed(),
+            QueryFilter::new(),
         )
         .is_some();
 
     if on_ground {
         damping.linear_damping = GROUND_DAMPING;
     } else {
-        damping.linear_damping = 0.0;
+        damping.linear_damping = 1.0;
     }
 
     let local_z = player_transform.local_z();
@@ -97,16 +100,30 @@ pub fn player_movement(
         new_velocity += sidemove;
     }
 
-    let target_speed = if keyboard_input.pressed(KeyCode::LShift) {
+    let mut target_speed = MOVEMENT_SPEED;
+    if keyboard_input.pressed(KeyCode::LShift) && on_ground {
         //Running speed
-        MOVEMENT_SPEED + MOVEMENT_RUN_SPEED_BOOST
-    } else {
-        //Walking speed
-        MOVEMENT_SPEED
-    };
+        target_speed += MOVEMENT_RUN_SPEED_BOOST;
+    }
+
+    if keyboard_input.pressed(KeyCode::LControl) && on_ground {
+        //Running speed
+        target_speed += MOVEMENT_CROUCH_SPEED_BOOST;
+    }
+
+    let mut multiplier = 100.0;
+
+    if keyboard_input.pressed(KeyCode::LShift) && on_ground {
+        //Running speed
+        multiplier += 150.0;
+    }
+
+    if !on_ground {
+        multiplier *= 0.25;
+    }
 
     //WASD movement
-    player_velocity.linvel += new_velocity * time.delta_seconds() * 500.0;
+    player_velocity.linvel += new_velocity * time.delta_seconds() * multiplier;
 
     let flat_velocity = Vec3::new(player_velocity.linvel.x, 0.0, player_velocity.linvel.z);
 
@@ -114,7 +131,9 @@ pub fn player_movement(
         let mut limited_velocity = flat_velocity.normalize() * target_speed;
         limited_velocity.y = player_velocity.linvel.y;
 
-        player_velocity.linvel = limited_velocity;
+        if on_ground {
+            player_velocity.linvel = limited_velocity;
+        }
     }
 
     //Jump movement
