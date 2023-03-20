@@ -101,7 +101,7 @@ pub fn player_movement(
     }
 
     let mut target_speed = MOVEMENT_SPEED;
-    if keyboard_input.pressed(KeyCode::LShift) && on_ground {
+    if keyboard_input.pressed(KeyCode::LShift) && on_ground && !keyboard_input.pressed(KeyCode::S) {
         //Running speed
         target_speed += MOVEMENT_RUN_SPEED_BOOST;
     }
