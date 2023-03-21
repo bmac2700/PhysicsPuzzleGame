@@ -74,7 +74,7 @@ pub fn player_movement(
     if on_ground {
         damping.linear_damping = GROUND_DAMPING;
     } else {
-        damping.linear_damping = 1.0;
+        damping.linear_damping = 2.0;
     }
 
     let local_z = player_transform.local_z();
@@ -111,7 +111,7 @@ pub fn player_movement(
         target_speed += MOVEMENT_CROUCH_SPEED_BOOST;
     }
 
-    let mut multiplier = 100.0;
+    let mut multiplier = 150.0;
 
     if keyboard_input.pressed(KeyCode::LShift) && on_ground {
         //Running speed

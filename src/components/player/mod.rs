@@ -18,8 +18,8 @@ use self::pickable_object::PlayerItemPickupState;
 const GROUND_DAMPING: f32 = 5.0;
 const GROUND_TOI: f32 = 8.0;
 
-const MOVEMENT_SPEED: f32 = 16.0;
-const MOVEMENT_RUN_SPEED_BOOST: f32 = 16.0;
+const MOVEMENT_SPEED: f32 = 24.0;
+const MOVEMENT_RUN_SPEED_BOOST: f32 = 8.0;
 const MOVEMENT_CROUCH_SPEED_BOOST: f32 = -12.0;
 const JUMP_FORCE: f32 = 40.0;
 const JUMP_GRAVITY: f32 = 8.0;

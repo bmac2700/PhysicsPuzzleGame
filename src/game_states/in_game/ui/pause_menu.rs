@@ -1,7 +1,7 @@
-use bevy::{prelude::*, window::CursorGrabMode};
+use bevy::{prelude::*};
 
 use crate::game_states::{
-    in_game::{GamePauseEvent, InGameEntity, InGameState},
+    in_game::{GamePauseEvent, InGameEntity, InGameState, unpause_game},
     menu::{ButtonData, HOVERED_BUTTON, NORMAL_BUTTON, PRESSED_BUTTON},
     AppState,
 };
@@ -203,11 +203,7 @@ pub fn handle_pause_menu_input(
                     }
 
                     if button_data.button_id == 1 {
-                        *ingame_state = InGameState::Running;
-                        game_pause.send(GamePauseEvent::Unpause);
-                        window.cursor.grab_mode = CursorGrabMode::Locked;
-                        window.cursor.visible = false;
-                        rapier_configuration.physics_pipeline_active = true;
+                        unpause_game(&mut ingame_state, &mut game_pause, &mut rapier_configuration, &mut window);
                     }
                 }
                 Interaction::Hovered => {
