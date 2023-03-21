@@ -5,10 +5,12 @@ use game_states::{
     in_game::{ui::pause_menu::PauseMenuData, GamePauseEvent, InGameState},
     AppState,
 };
+use keymap_manager::KeymapPlugin;
 use post_processing::PostProcessingMaterial;
 
 mod components;
 mod game_states;
+mod keymap_manager;
 mod post_processing;
 
 #[bevy_main]
@@ -27,6 +29,7 @@ fn main() {
         }))
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(RapierDebugRenderPlugin::default())
+        .add_plugin(KeymapPlugin)
         .add_state::<AppState>()
         .add_event::<GamePauseEvent>()
         .insert_resource(InGameState::Running)

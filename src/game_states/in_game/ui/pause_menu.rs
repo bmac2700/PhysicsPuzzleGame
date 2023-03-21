@@ -1,7 +1,7 @@
-use bevy::{prelude::*};
+use bevy::prelude::*;
 
 use crate::game_states::{
-    in_game::{GamePauseEvent, InGameEntity, InGameState, unpause_game},
+    in_game::{unpause_game, GamePauseEvent, InGameEntity, InGameState},
     menu::{ButtonData, HOVERED_BUTTON, NORMAL_BUTTON, PRESSED_BUTTON},
     AppState,
 };
@@ -203,7 +203,12 @@ pub fn handle_pause_menu_input(
                     }
 
                     if button_data.button_id == 1 {
-                        unpause_game(&mut ingame_state, &mut game_pause, &mut rapier_configuration, &mut window);
+                        unpause_game(
+                            &mut ingame_state,
+                            &mut game_pause,
+                            &mut rapier_configuration,
+                            &mut window,
+                        );
                     }
                 }
                 Interaction::Hovered => {

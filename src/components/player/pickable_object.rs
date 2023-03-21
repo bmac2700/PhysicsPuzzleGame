@@ -1,7 +1,7 @@
 use bevy::{prelude::*, window::CursorGrabMode};
 use bevy_rapier3d::prelude::*;
 
-use crate::game_states::in_game::InGameState;
+use crate::{game_states::in_game::InGameState, keymap_manager::KeymapState};
 
 use super::{PlayerBody, PlayerCamera, MAX_PICKUP_TOI};
 
@@ -17,7 +17,7 @@ pub struct PickableObject;
 pub fn handle_object_pickup(
     rapier_context: Res<RapierContext>,
     windows: Query<&mut Window>,
-    keyboard_input: Res<Input<KeyCode>>,
+    keymap_state: Res<KeymapState>,
 
     player_camera_query: Query<&Transform, With<PlayerCamera>>,
     player_body_query: Query<&Transform, With<PlayerBody>>,
@@ -36,7 +36,7 @@ pub fn handle_object_pickup(
         return;
     }
 
-    if keyboard_input.just_pressed(KeyCode::E) && item_pickup_state.current_item_at_hand.is_some() {
+    if keymap_state.interact_use_just_pressed && item_pickup_state.current_item_at_hand.is_some() {
         for (entity, mut damping) in pickable_objects.iter_mut() {
             if item_pickup_state.current_item_at_hand.unwrap() != entity {
                 continue;
@@ -77,7 +77,7 @@ pub fn handle_object_pickup(
     );
 
     if let Some((hit_entity, _)) = ray_cast {
-        if keyboard_input.just_pressed(KeyCode::E)
+        if keymap_state.interact_use_just_pressed
             && item_pickup_state.current_item_at_hand.is_none()
         {
             for (entity, mut damping) in pickable_objects.iter_mut() {

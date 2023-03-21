@@ -1,7 +1,7 @@
 use bevy::{prelude::*, window::CursorGrabMode};
 use bevy_rapier3d::prelude::*;
 
-use crate::game_states::in_game::InGameState;
+use crate::{game_states::in_game::InGameState, keymap_manager::KeymapState};
 
 use super::{
     GROUND_DAMPING, GROUND_TOI, JUMP_FORCE, JUMP_GRAVITY, MOVEMENT_CROUCH_SPEED_BOOST,
@@ -37,11 +37,11 @@ pub fn initialize_player_body(
 }
 
 pub fn player_movement(
-    keyboard_input: Res<Input<KeyCode>>,
     time: Res<Time>,
     windows: Query<&mut Window>,
     mut query: Query<(&Transform, &mut Velocity, &mut Damping), (With<PlayerBody>, With<Velocity>)>,
     rapier_context: Res<RapierContext>,
+    keymap_state: Res<KeymapState>,
 
     ingame_state: Res<InGameState>,
 ) {
@@ -84,36 +84,36 @@ pub fn player_movement(
 
     let mut new_velocity = Vec3::ZERO;
 
-    if keyboard_input.pressed(KeyCode::W) {
+    if keymap_state.move_forward_pressed {
         new_velocity += forwardmove;
     }
 
-    if keyboard_input.pressed(KeyCode::S) {
+    if keymap_state.move_backward_pressed {
         new_velocity -= forwardmove;
     }
 
-    if keyboard_input.pressed(KeyCode::A) {
+    if keymap_state.move_left_pressed {
         new_velocity -= sidemove;
     }
 
-    if keyboard_input.pressed(KeyCode::D) {
+    if keymap_state.move_right_pressed {
         new_velocity += sidemove;
     }
 
     let mut target_speed = MOVEMENT_SPEED;
-    if keyboard_input.pressed(KeyCode::LShift) && on_ground && !keyboard_input.pressed(KeyCode::S) {
+    if keymap_state.move_sprint_pressed && on_ground && !keymap_state.move_backward_pressed {
         //Running speed
         target_speed += MOVEMENT_RUN_SPEED_BOOST;
     }
 
-    if keyboard_input.pressed(KeyCode::LControl) && on_ground {
+    if keymap_state.move_crouch_pressed && on_ground {
         //Running speed
         target_speed += MOVEMENT_CROUCH_SPEED_BOOST;
     }
 
     let mut multiplier = 150.0;
 
-    if keyboard_input.pressed(KeyCode::LShift) && on_ground {
+    if keymap_state.move_sprint_pressed && on_ground {
         //Running speed
         multiplier += 150.0;
     }
@@ -137,7 +137,7 @@ pub fn player_movement(
     }
 
     //Jump movement
-    if keyboard_input.just_pressed(KeyCode::Space) && on_ground {
+    if keymap_state.move_jump_just_pressed && on_ground {
         player_velocity.linvel = Vec3::new(
             player_velocity.linvel.x,
             JUMP_FORCE,
