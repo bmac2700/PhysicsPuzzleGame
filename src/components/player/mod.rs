@@ -24,6 +24,9 @@ const MOVEMENT_CROUCH_SPEED_BOOST: f32 = -12.0;
 const JUMP_FORCE: f32 = 40.0;
 const JUMP_GRAVITY: f32 = 8.0;
 
+//Pickup system variables
+const MAX_PICKUP_TOI: f32 = 15.0;
+
 #[derive(Resource, Default)]
 pub struct PlayerInputState {
     reader_motion: ManualEventReader<MouseMotion>,

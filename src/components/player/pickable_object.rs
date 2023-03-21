@@ -3,7 +3,7 @@ use bevy_rapier3d::prelude::*;
 
 use crate::game_states::in_game::InGameState;
 
-use super::{PlayerBody, PlayerCamera};
+use super::{PlayerBody, PlayerCamera, MAX_PICKUP_TOI};
 
 #[derive(Resource, Default)]
 pub struct PlayerItemPickupState {
@@ -71,7 +71,7 @@ pub fn handle_object_pickup(
     let ray_cast = rapier_context.cast_ray(
         start,
         dir,
-        Real::MAX,
+        MAX_PICKUP_TOI,
         false,
         QueryFilter::new().exclude_sensors(),
     );
