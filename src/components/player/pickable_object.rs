@@ -8,6 +8,7 @@ use super::{PlayerBody, PlayerCamera};
 #[derive(Resource, Default)]
 pub struct PlayerItemPickupState {
     pub current_item_at_hand: Option<Entity>,
+    pub old_damping: Option<Damping>,
 }
 
 #[derive(Component)]
@@ -22,7 +23,7 @@ pub fn handle_object_pickup(
     player_body_query: Query<&Transform, With<PlayerBody>>,
 
     mut item_pickup_state: ResMut<PlayerItemPickupState>,
-    pickable_objects: Query<Entity, With<PickableObject>>,
+    mut pickable_objects: Query<(Entity, &mut Damping), With<PickableObject>>,
 
     ingame_state: Res<InGameState>,
 ) {
@@ -36,7 +37,17 @@ pub fn handle_object_pickup(
     }
 
     if keyboard_input.just_pressed(KeyCode::E) && item_pickup_state.current_item_at_hand.is_some() {
+        for (entity, mut damping) in pickable_objects.iter_mut() {
+            if item_pickup_state.current_item_at_hand.unwrap() != entity {
+                continue;
+            }
+
+            *damping = item_pickup_state.old_damping.unwrap();
+            break;
+        }
+
         item_pickup_state.current_item_at_hand = None;
+        item_pickup_state.old_damping = None;
         return;
     }
 
@@ -65,12 +76,21 @@ pub fn handle_object_pickup(
         QueryFilter::new().exclude_sensors(),
     );
 
-    if let Some((entity, _)) = ray_cast {
+    if let Some((hit_entity, _)) = ray_cast {
         if keyboard_input.just_pressed(KeyCode::E)
             && item_pickup_state.current_item_at_hand.is_none()
         {
-            if pickable_objects.contains(entity) {
+            for (entity, mut damping) in pickable_objects.iter_mut() {
+                if hit_entity != entity {
+                    continue;
+                }
+
                 item_pickup_state.current_item_at_hand = Some(entity);
+                item_pickup_state.old_damping = Some(*damping);
+
+                damping.linear_damping = 10.0;
+                damping.angular_damping = 10.0;
+                return;
             }
         }
     }
@@ -78,7 +98,7 @@ pub fn handle_object_pickup(
 
 pub fn move_object(
     item_pickup_state: Res<PlayerItemPickupState>,
-    mut pickable_objects: Query<(Entity, &mut Transform), With<PickableObject>>,
+    mut pickable_objects: Query<(Entity, &Transform, &mut Velocity), With<PickableObject>>,
     player_camera_query: Query<&Transform, (With<PlayerCamera>, Without<PickableObject>)>,
     player_body_query: Query<&Transform, (With<PlayerBody>, Without<PickableObject>)>,
 ) {
@@ -100,7 +120,7 @@ pub fn move_object(
         }
     };
 
-    for (entity, mut transform) in pickable_objects.iter_mut() {
+    for (entity, transform, mut velocity) in pickable_objects.iter_mut() {
         if entity != item_pickup_state.current_item_at_hand.unwrap() {
             continue;
         }
@@ -109,6 +129,10 @@ pub fn move_object(
         let start = player_body_transform.translation + player_camera_transform.translation;
         dir.y = player_camera_transform.forward().y;
 
-        transform.translation = start + (dir * 15.0);
+        let target_object_position = start + (dir * 15.0);
+
+        let dir = target_object_position - transform.translation;
+
+        velocity.linvel += dir;
     }
 }

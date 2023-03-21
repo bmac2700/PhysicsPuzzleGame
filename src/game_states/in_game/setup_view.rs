@@ -79,6 +79,7 @@ pub fn create_camera(
         .insert(RigidBody::Dynamic)
         .insert(Collider::cuboid(2.5, 2.5, 2.5))
         .insert(Damping::default())
+        .insert(Velocity::default())
         .insert(PickableObject);
 
     commands
