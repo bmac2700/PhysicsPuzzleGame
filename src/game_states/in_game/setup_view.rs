@@ -4,7 +4,9 @@ use bevy::{
 
 use bevy_rapier3d::prelude::*;
 
-use crate::components::player::{PickableObject, PlayerBody, PlayerCamera, PlayerModel};
+use crate::components::player::{
+    DroppedInventoryItem, PickableObject, PlayerBody, PlayerCamera, PlayerModel,
+};
 
 use super::{InGameEntity, MainCameraData};
 
@@ -82,6 +84,22 @@ pub fn create_camera(
         .insert(GravityScale(6.0))
         .insert(Velocity::default())
         .insert(PickableObject);
+
+    commands
+        .spawn(PbrBundle {
+            mesh: meshes.add(Mesh::from(shape::Cube { size: 2.5 })),
+            material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
+            transform: Transform::from_xyz(0.0, 10.0, 0.0),
+            ..default()
+        })
+        .insert(RigidBody::Dynamic)
+        .insert(Collider::cuboid(1.25, 1.25, 1.25))
+        .insert(Damping::default())
+        .insert(GravityScale(3.0))
+        .insert(Velocity::default())
+        .insert(DroppedInventoryItem {
+            data: crate::components::player::PlayerInventoryItem::Empty,
+        });
 
     commands
         .spawn(Collider::cuboid(100.0, 0.1, 100.0))

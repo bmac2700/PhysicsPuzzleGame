@@ -2,17 +2,19 @@ use bevy::{ecs::event::ManualEventReader, input::mouse::MouseMotion, prelude::*}
 
 use crate::game_states::AppState;
 
+mod inventory;
 mod look;
 mod model;
 mod movement;
 mod pickable_object;
 
+pub use inventory::{DroppedInventoryItem, PlayerInventoryItem};
 pub use look::PlayerCamera;
 pub use model::PlayerModel;
 pub use movement::PlayerBody;
 pub use pickable_object::PickableObject;
 
-use self::pickable_object::PlayerItemPickupState;
+use self::{inventory::PlayerInventory, pickable_object::PlayerItemPickupState};
 
 // Movement variables
 const GROUND_DAMPING: f32 = 5.0;
@@ -40,10 +42,12 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<PlayerInputState>()
             .init_resource::<PlayerItemPickupState>()
+            .init_resource::<PlayerInventory>()
             .add_system(movement::player_movement.in_set(OnUpdate(AppState::InGame)))
             .add_system(movement::initialize_player_body.in_set(OnUpdate(AppState::InGame)))
             .add_system(look::player_look.in_set(OnUpdate(AppState::InGame)))
             .add_system(pickable_object::handle_object_pickup.in_set(OnUpdate(AppState::InGame)))
-            .add_system(pickable_object::move_object.in_set(OnUpdate(AppState::InGame)));
+            .add_system(pickable_object::move_object.in_set(OnUpdate(AppState::InGame)))
+            .add_system(inventory::handle_item_pickup.in_set(OnUpdate(AppState::InGame)));
     }
 }
