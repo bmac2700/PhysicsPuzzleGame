@@ -4,7 +4,7 @@ use bevy::{
         clear_color::ClearColorConfig,
     },
     prelude::*,
-    render::camera::RenderTarget,
+    render::{camera::RenderTarget, view::ColorGrading},
 };
 
 use bevy_rapier3d::prelude::*;
@@ -48,14 +48,22 @@ pub fn create_camera(
                             ..default()
                         },
                         transform: Transform::from_translation(Vec3::new(0.0, 5.0, 0.0)),
+                        color_grading: ColorGrading {
+                            exposure: -7.5,
+                            ..default()
+                        },
+                        projection: Projection::Perspective(PerspectiveProjection {
+                            fov: 1.22173,
+                            ..default()
+                        }),
                         ..default()
                     },
                     // Disable UI rendering for the first pass camera. This prevents double rendering of UI at
                     // the cost of rendering the UI without any post processing effects.
                     UiCameraConfig { show_ui: false },
                     BloomSettings {
-                        intensity: 0.05,
-                        composite_mode: BloomCompositeMode::EnergyConserving,
+                        intensity: 0.1,
+                        composite_mode: BloomCompositeMode::Additive,
                         ..default()
                     },
                 ))
@@ -72,7 +80,7 @@ pub fn create_camera(
                 .insert(PlayerModel);
         });
 
-    commands.spawn(PointLightBundle {
+    /*commands.spawn(PointLightBundle {
         point_light: PointLight {
             intensity: 1500.0,
             shadows_enabled: true,
@@ -80,7 +88,7 @@ pub fn create_camera(
         },
         transform: Transform::from_xyz(4.0, 8.0, 4.0),
         ..default()
-    });
+    });*/
 
     commands
         .spawn(PbrBundle {
@@ -111,6 +119,11 @@ pub fn create_camera(
         .insert(DroppedInventoryItem {
             data: crate::components::player::PlayerInventoryItem::Empty,
         });
+
+    commands.insert_resource(AmbientLight {
+        color: Color::rgb(0.318242, 0.318466, 0.567203),
+        brightness: 100.0,
+    });
 
     commands
         .spawn(Collider::cuboid(100.0, 0.1, 100.0))
