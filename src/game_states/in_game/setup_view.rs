@@ -1,5 +1,10 @@
 use bevy::{
-    core_pipeline::clear_color::ClearColorConfig, prelude::*, render::camera::RenderTarget,
+    core_pipeline::{
+        bloom::{BloomCompositeMode, BloomSettings},
+        clear_color::ClearColorConfig,
+    },
+    prelude::*,
+    render::camera::RenderTarget,
 };
 
 use bevy_rapier3d::prelude::*;
@@ -12,10 +17,10 @@ use super::{InGameEntity, MainCameraData};
 
 pub fn create_camera(
     mut commands: Commands,
-    main_camera_data: Res<MainCameraData>,
-    asset_server: Res<AssetServer>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    main_camera_data: Res<MainCameraData>,
+    asset_server: Res<AssetServer>,
 ) {
     commands
         .spawn(SpatialBundle::from_transform(Transform::from_translation(
@@ -39,6 +44,7 @@ pub fn create_camera(
                         },
                         camera: Camera {
                             target: RenderTarget::Image(main_camera_data.image_handle.clone()),
+                            hdr: true,
                             ..default()
                         },
                         transform: Transform::from_translation(Vec3::new(0.0, 5.0, 0.0)),
@@ -47,6 +53,11 @@ pub fn create_camera(
                     // Disable UI rendering for the first pass camera. This prevents double rendering of UI at
                     // the cost of rendering the UI without any post processing effects.
                     UiCameraConfig { show_ui: false },
+                    BloomSettings {
+                        intensity: 0.05,
+                        composite_mode: BloomCompositeMode::EnergyConserving,
+                        ..default()
+                    },
                 ))
                 .insert(PlayerCamera);
 

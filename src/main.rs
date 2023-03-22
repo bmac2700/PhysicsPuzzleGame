@@ -1,6 +1,13 @@
+#![allow(irrefutable_let_patterns)]
+#![allow(dead_code)]
+#![allow(unused_variables)]
+
 use bevy::{prelude::*, sprite::Material2dPlugin};
 use bevy_rapier3d::prelude::*;
-use components::player::PlayerPlugin;
+use components::{
+    player::PlayerPlugin,
+    world::{entity_spawner::EntitySpawnPlugin, levels::LevelPlugin},
+};
 use game_states::{
     in_game::{ui::pause_menu::PauseMenuData, GamePauseEvent, InGameState},
     AppState,
@@ -36,6 +43,8 @@ fn main() {
         .insert_resource(PauseMenuData::default())
         .add_plugin(Material2dPlugin::<PostProcessingMaterial>::default())
         .add_plugin(PlayerPlugin)
+        .add_plugin(LevelPlugin)
+        .add_plugin(EntitySpawnPlugin)
         .add_system(game_states::menu::setup_camera.on_startup())
         .add_system(game_states::in_game::setup_camera_resources.on_startup())
         .add_system(

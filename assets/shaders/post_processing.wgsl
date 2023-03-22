@@ -28,7 +28,7 @@ fn fragment(
     let uv = coords_to_viewport_uv(position.xy, view.viewport);
     var texture_uv = uv;
 
-    //texture_uv = pixelate(texture_uv, vec2(1920.0/3.5, 1080.0/3.5));
+    texture_uv = pixelate(texture_uv, vec2(1920.0/3.5, 1080.0/3.5));
 
     var output_color = vec4<f32>(
         wash_color(textureSample(texture, our_sampler, texture_uv).r, wash_color_factor),
