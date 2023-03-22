@@ -5,14 +5,8 @@ use bevy::{
             Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
         },
         texture::BevyDefault,
-        view::RenderLayers,
     },
-    sprite::MaterialMesh2dBundle,
 };
-
-use crate::post_processing::PostProcessingMaterial;
-
-use super::InGameEntity;
 
 #[derive(Resource)]
 pub struct MainCameraData {
@@ -90,67 +84,4 @@ pub fn setup_camera_resources(
         image_handle,
         mesh_handle: None,
     });
-}
-
-pub fn setup_camera(
-    mut commands: Commands,
-    windows: Query<&Window>,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut post_processing_materials: ResMut<Assets<PostProcessingMaterial>>,
-    mut main_camera_data: ResMut<MainCameraData>,
-) {
-    let window = windows.single();
-
-    let size = Extent3d {
-        width: window.resolution.physical_width(),
-        height: window.resolution.physical_height(),
-        ..default()
-    };
-
-    // This specifies the layer used for the post processing camera, which will be attached to the post processing camera and 2d quad.
-    let post_processing_pass_layer = RenderLayers::layer((RenderLayers::TOTAL_LAYERS - 1) as u8);
-
-    let quad_handle = meshes.add(Mesh::from(shape::Quad::new(Vec2::new(
-        size.width as f32,
-        size.height as f32,
-    ))));
-
-    main_camera_data.mesh_handle = Some(quad_handle.clone());
-
-    // This material has the texture that has been rendered.
-    let material_handle = post_processing_materials.add(PostProcessingMaterial {
-        source_image: main_camera_data.image_handle.clone(),
-        wash_color: 3.0,
-    });
-
-    // Post processing 2d quad, with material using the render texture done by the main camera, with a custom shader.
-    commands
-        .spawn((
-            MaterialMesh2dBundle {
-                mesh: quad_handle.into(),
-                material: material_handle,
-                transform: Transform {
-                    translation: Vec3::new(0.0, 0.0, 1.5),
-                    ..default()
-                },
-                ..default()
-            },
-            post_processing_pass_layer,
-        ))
-        .insert(InGameEntity);
-
-    // The post-processing pass camera.
-    commands
-        .spawn((
-            Camera2dBundle {
-                camera: Camera {
-                    // renders after the first main camera which has default value: 0.
-                    order: 1,
-                    ..default()
-                },
-                ..Camera2dBundle::default()
-            },
-            post_processing_pass_layer,
-        ))
-        .insert(InGameEntity);
 }

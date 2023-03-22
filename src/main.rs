@@ -1,7 +1,3 @@
-#![allow(irrefutable_let_patterns)]
-#![allow(dead_code)]
-#![allow(unused_variables)]
-
 use bevy::{prelude::*, sprite::Material2dPlugin};
 use bevy_rapier3d::prelude::*;
 use components::{
@@ -72,7 +68,6 @@ fn main() {
         )
         //InGame
         .add_system(game_states::menu::remove_camera.in_schedule(OnEnter(AppState::InGame)))
-        .add_system(game_states::in_game::setup_camera.in_schedule(OnEnter(AppState::InGame)))
         .add_system(game_states::in_game::game_pause.in_set(OnUpdate(AppState::InGame)))
         .add_system(
             game_states::in_game::ui::pause_menu::setup_pause_menu
@@ -82,6 +77,5 @@ fn main() {
             game_states::in_game::ui::pause_menu::handle_pause_menu_input
                 .in_set(OnUpdate(AppState::InGame)),
         )
-        .add_system(game_states::in_game::create_camera.in_schedule(OnEnter(AppState::InGame)))
         .run();
 }

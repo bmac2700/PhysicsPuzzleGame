@@ -1,6 +1,3 @@
-mod setup_view;
-pub use setup_view::*;
-
 mod setup_camera;
 use bevy_rapier3d::prelude::RapierConfiguration;
 pub use setup_camera::*;

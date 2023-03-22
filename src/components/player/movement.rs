@@ -4,37 +4,12 @@ use bevy_rapier3d::prelude::*;
 use crate::{game_states::in_game::InGameState, keymap_manager::KeymapState};
 
 use super::{
-    GROUND_DAMPING, GROUND_TOI, JUMP_FORCE, JUMP_GRAVITY, MOVEMENT_CROUCH_SPEED_BOOST,
-    MOVEMENT_RUN_SPEED_BOOST, MOVEMENT_SPEED,
+    GROUND_DAMPING, GROUND_TOI, JUMP_FORCE, MOVEMENT_CROUCH_SPEED_BOOST, MOVEMENT_RUN_SPEED_BOOST,
+    MOVEMENT_SPEED,
 };
 
 #[derive(Component)]
 pub struct PlayerBody;
-
-pub fn initialize_player_body(
-    mut commands: Commands,
-    query: Query<
-        Entity,
-        (
-            With<PlayerBody>,
-            Without<RigidBody>,
-            Without<Velocity>,
-            Without<LockedAxes>,
-            Without<Damping>,
-            Without<GravityScale>,
-        ),
-    >,
-) {
-    for entity in query.iter() {
-        commands
-            .entity(entity)
-            .insert(RigidBody::Dynamic)
-            .insert(Velocity::default())
-            .insert(LockedAxes::ROTATION_LOCKED)
-            .insert(Damping::default())
-            .insert(GravityScale(JUMP_GRAVITY));
-    }
-}
 
 pub fn player_movement(
     time: Res<Time>,

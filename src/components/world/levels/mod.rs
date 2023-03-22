@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_rapier3d::prelude::*;
 
 use crate::game_states::{in_game::InGameEntity, AppState};
 
@@ -29,7 +30,6 @@ fn level_debug(
 ) {
     if keyboard_input.just_pressed(KeyCode::R) {
         level_change_event.send(LevelChangeEvent::ChangeLevel(Level::Demo));
-        println!("NEW EVENT");
     }
 }
 
@@ -42,15 +42,24 @@ fn level_changer(
 ) {
     for event in level_change_events.iter() {
         for entity in entity_query.iter() {
-            //commands.entity(entity).despawn_recursive();
+            commands.entity(entity).despawn_recursive();
         }
 
-        if let LevelChangeEvent::ChangeLevel(level) = event {
-            match level {
-                Level::Demo => {
-                    println!("Loading world");
-                    demo::load_world(&mut commands, &asset_server, &mut entity_spawner);
-                }
+        commands.insert_resource(AmbientLight {
+            color: Color::rgb(0.318242, 0.318466, 0.567203),
+            brightness: 100.0,
+        });
+
+        commands
+            .spawn(Collider::cuboid(100.0, 0.1, 100.0))
+            .insert(Transform::from_translation(Vec3::new(0.0, -2.5, 0.0)))
+            .insert(InGameEntity);
+
+        let LevelChangeEvent::ChangeLevel(level) = event;
+
+        match level {
+            Level::Demo => {
+                demo::load_world(&mut commands, &asset_server, &mut entity_spawner);
             }
         }
     }
