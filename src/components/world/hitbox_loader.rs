@@ -11,8 +11,14 @@ pub enum HitboxType {
 }
 
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct Hitbox {
+    pub name: String,
+    pub hitbox: HitboxType,
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct MapCollision {
-    pub hitboxes: Vec<HitboxType>,
+    pub hitboxes: Vec<Hitbox>,
 }
 
 use bevy::prelude::*;
@@ -22,7 +28,7 @@ use crate::game_states::in_game::InGameEntity;
 
 pub fn load_hitboxes(commands: &mut Commands, map_collision: MapCollision) {
     for hitbox in map_collision.hitboxes {
-        match hitbox {
+        match hitbox.hitbox {
             HitboxType::Rectangle(v) => {
                 commands
                     .spawn(TransformBundle::from_transform(
