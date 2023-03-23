@@ -65,6 +65,270 @@
           ]
         }
       }
+    },
+    {
+      "name": "Store hitbox",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            43.1,
+            15.8,
+            21.8
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -42.7,
+            15.8,
+            11.9
+          ]
+        }
+      }
+    },
+    {
+      "name": "Sign feet",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            0.74,
+            8.2,
+            0.74
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -32.91,
+            10.5,
+            -14.35
+          ]
+        }
+      }
+    },
+    {
+      "name": "Sign feet 2",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            0.75,
+            8.2,
+            0.74
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -47.88,
+            10.5,
+            -14.35
+          ]
+        }
+      }
+    },
+    {
+      "name": "Sign ",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            8.2,
+            5.2,
+            1.2
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -40.4,
+            13.8,
+            -14.38
+          ]
+        }
+      }
+    },
+    {
+      "name": "Lamp",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            1.1,
+            17.0,
+            1.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -61.3,
+            17.5,
+            -52.25
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cale",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            27.5,
+            20.0,
+            23.8
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -57.2,
+            20.0,
+            -104.7
+          ]
+        }
+      }
+    },
+    {
+      "name": "CaleRamp",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            4.5,
+            0.5,
+            13.6
+          ],
+          "rotation": [
+            0.105,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -25.3,
+            1.0,
+            -108.5
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cale doorstop",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            9.7,
+            1.5,
+            3.2
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -20.2,
+            1.4,
+            -125.15
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cale Step2",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            5.3,
+            1.0,
+            1.2
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -15.8,
+            1.2,
+            -120.9
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cale Step1",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            5.3,
+            1.0,
+            1.2
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -15.8,
+            0.3,
+            -118.6
+          ]
+        }
+      }
+    },
+    {
+      "name": "Pavement 1",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            43.5,
+            0.8,
+            5.9
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -42.3,
+            0.0,
+            -56.65
+          ]
+        }
+      }
+    },
+    {
+      "name": "Pavement 2",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            138.0,
+            1.0,
+            25.6
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            48.0,
+            0.0,
+            3.6
+          ]
+        }
+      }
     }
   ]
 }
