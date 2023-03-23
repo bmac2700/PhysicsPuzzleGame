@@ -68,7 +68,7 @@ pub fn handle_player_spawn(
                                 },
                                 transform: Transform::from_translation(Vec3::new(0.0, 5.0, 0.0)),
                                 color_grading: ColorGrading {
-                                    exposure: -7.5,
+                                    exposure: -6.5,
                                     ..default()
                                 },
                                 projection: Projection::Perspective(PerspectiveProjection {

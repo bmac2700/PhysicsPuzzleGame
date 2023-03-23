@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_rapier3d::prelude::*;
 
 use crate::game_states::{in_game::InGameEntity, AppState};
 
@@ -45,15 +44,10 @@ fn level_changer(
             commands.entity(entity).despawn_recursive();
         }
 
-        commands.insert_resource(AmbientLight {
-            color: Color::rgb(0.318242, 0.318466, 0.567203),
-            brightness: 100.0,
-        });
-
-        commands
-            .spawn(Collider::cuboid(100.0, 0.1, 100.0))
-            .insert(Transform::from_translation(Vec3::new(0.0, -2.5, 0.0)))
-            .insert(InGameEntity);
+        /*commands
+        .spawn(Collider::cuboid(100.0, 0.1, 100.0))
+        .insert(Transform::from_translation(Vec3::new(0.0, -2.5, 0.0)))
+        .insert(InGameEntity);*/
 
         let LevelChangeEvent::ChangeLevel(level) = event;
 
