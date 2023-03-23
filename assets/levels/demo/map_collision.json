@@ -28,7 +28,7 @@
         "Rectangle": {
           "size": [
             3.0,
-            19.5,
+            100.0,
             195.0
           ],
           "rotation": [
@@ -38,7 +38,7 @@
           ],
           "location": [
             -88.1,
-            20.0,
+            100.0,
             -160.0
           ]
         }
@@ -50,7 +50,7 @@
         "Rectangle": {
           "size": [
             3.0,
-            19.5,
+            100.0,
             195.0
           ],
           "rotation": [
@@ -60,7 +60,7 @@
           ],
           "location": [
             186.1,
-            20.0,
+            100.0,
             -160.0
           ]
         }
@@ -169,9 +169,9 @@
             0.0
           ],
           "location": [
-            -61.3,
-            17.5,
-            -52.25
+            95.05,
+            17.0,
+            -51.75
           ]
         }
       }
@@ -326,6 +326,534 @@
             48.0,
             0.0,
             3.6
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cale side",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            11.0,
+            14.5,
+            40.1
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -20.5,
+            14.5,
+            -168.2
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cale side copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            27.0,
+            14.5,
+            40.1
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -58.5,
+            14.5,
+            -168.2
+          ]
+        }
+      }
+    },
+    {
+      "name": "Lamp copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            1.1,
+            17.0,
+            1.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -61.3,
+            17.5,
+            -52.25
+          ]
+        }
+      }
+    },
+    {
+      "name": "Pavement 1 copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            72.7,
+            0.8,
+            5.9
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            110.3,
+            0.0,
+            -56.65
+          ]
+        }
+      }
+    },
+    {
+      "name": "Lamp copy copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            1.2,
+            17.0,
+            1.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            19.2,
+            17.5,
+            -20.85
+          ]
+        }
+      }
+    },
+    {
+      "name": "Lamp copy copy copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            1.2,
+            17.0,
+            1.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            180.5,
+            17.5,
+            -20.85
+          ]
+        }
+      }
+    },
+    {
+      "name": "Blue building",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            27.79,
+            3.5,
+            30.3
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            166.8,
+            4.2,
+            28.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "Blue building copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            29.2,
+            23.0,
+            31.1
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            166.8,
+            30.7,
+            28.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "Blue building step copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            6.3,
+            1.5,
+            1.7
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            133.3,
+            1.82,
+            3.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "Blue building step copy copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            6.3,
+            2.5,
+            1.8
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            133.3,
+            2.55,
+            5.6
+          ]
+        }
+      }
+    },
+    {
+      "name": "Blue building step copy copy copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            6.3,
+            4.2,
+            1.8
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            133.3,
+            2.1,
+            8.2
+          ]
+        }
+      }
+    },
+    {
+      "name": "Blue building step copy copy copy copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            6.3,
+            4.2,
+            1.8
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            133.3,
+            3.85,
+            10.95
+          ]
+        }
+      }
+    },
+    {
+      "name": "Blue building step copy copy copy copy copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            6.3,
+            5.0,
+            8.7
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            133.3,
+            5.0,
+            20.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "CaleRamp copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            5.5,
+            1.8,
+            6.0
+          ],
+          "rotation": [
+            0.3,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -16.0,
+            -0.6,
+            -116.8
+          ]
+        }
+      }
+    },
+    {
+      "name": "Blue building Ramp",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            6.3,
+            1.5,
+            11.8
+          ],
+          "rotation": [
+            -0.57,
+            0.0,
+            0.0
+          ],
+          "location": [
+            133.3,
+            2.38,
+            2.27
+          ]
+        }
+      }
+    },
+    {
+      "name": "Big building",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            22.1,
+            80.0,
+            24.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            31.3,
+            86.2,
+            27.3
+          ]
+        }
+      }
+    },
+    {
+      "name": "Big building copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            22.1,
+            80.0,
+            24.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            101.0,
+            86.2,
+            27.3
+          ]
+        }
+      }
+    },
+    {
+      "name": "Big wall",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            143.5,
+            100.0,
+            3.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            54.2,
+            100.0,
+            31.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "Big wall Last",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            35.0,
+            100.0,
+            2.2
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -51.5,
+            100.0,
+            -307.2
+          ]
+        }
+      }
+    },
+    {
+      "name": "Big wall Last copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            100.0,
+            100.0,
+            2.2
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            83.0,
+            100.0,
+            -309.5
+          ]
+        }
+      }
+    },
+    {
+      "name": "Dumpster lid",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            6.8,
+            0.5,
+            8.8
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            -0.3
+          ],
+          "location": [
+            -77.6,
+            12.0,
+            -287.5
+          ]
+        }
+      }
+    },
+    {
+      "name": "Dumpster",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            6.8,
+            5.0,
+            8.8
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            -77.7,
+            5.3,
+            -287.5
+          ]
+        }
+      }
+    },
+    {
+      "name": "Dumpster copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            6.8,
+            5.0,
+            8.9
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "location": [
+            33.1,
+            5.3,
+            -257.8
+          ]
+        }
+      }
+    },
+    {
+      "name": "Dumpster lid copy",
+      "hitbox": {
+        "Rectangle": {
+          "size": [
+            6.8,
+            0.5,
+            8.8
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            -0.28
+          ],
+          "location": [
+            33.1,
+            12.0,
+            -257.8
           ]
         }
       }
