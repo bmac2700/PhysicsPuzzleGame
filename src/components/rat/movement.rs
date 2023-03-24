@@ -17,14 +17,13 @@ pub fn rat_movement(
 
         new_velocity += forwardmove;
 
-        let on_ground = rapier_context
-            .cast_ray(
-                rat_transform.translation,
-                Vec3::NEG_Y,
-                5.0,
-                true,
-                QueryFilter::only_fixed(),
-            );
+        let on_ground = rapier_context.cast_ray(
+            rat_transform.translation,
+            Vec3::NEG_Y,
+            2.0,
+            true,
+            QueryFilter::only_fixed(),
+        );
 
         if on_ground.is_some() {
             rat_velocity.linvel += new_velocity * time.delta_seconds() * 50.0;
@@ -33,21 +32,19 @@ pub fn rat_movement(
         let mut ray_start = rat_transform.translation;
 
         if let Some((_, toi)) = on_ground {
-            ray_start.y += -1.0*toi + 0.2;
+            ray_start.y += -1.0 * toi + 0.2;
         }
 
         let in_front = rapier_context
-            .cast_ray(
-                ray_start,
-                forwardmove,
-                5.0,
-                true,
-                QueryFilter::only_fixed(),
-            )
+            .cast_ray(ray_start, forwardmove, 5.0, true, QueryFilter::only_fixed())
             .is_some();
 
         if in_front {
-            rat_velocity.angvel.y += 1.0;
+            if rand::random::<bool>() {
+                rat_velocity.angvel.y += 2.5;
+            } else {
+                rat_velocity.angvel.y -= 2.5;
+            }
         }
     }
 }
