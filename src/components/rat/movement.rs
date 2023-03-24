@@ -25,7 +25,10 @@ pub fn rat_movement(
             QueryFilter::only_fixed(),
         );
 
-        if on_ground.is_some() {
+        let mut velocity_2d = rat_velocity.linvel;
+        velocity_2d.y = 0.0;
+
+        if on_ground.is_some() || velocity_2d.length() < 1.0 {
             rat_velocity.linvel += new_velocity * time.delta_seconds() * 50.0;
         }
 
@@ -36,14 +39,18 @@ pub fn rat_movement(
         }
 
         let in_front = rapier_context
-            .cast_ray(ray_start, forwardmove, 5.0, true, QueryFilter::only_fixed())
+            .cast_ray(ray_start, forwardmove, 5.0, true, QueryFilter::new())
             .is_some();
 
-        if in_front {
+        if in_front || rat_velocity.linvel.length() < 1.0{
             if rand::random::<bool>() {
                 rat_velocity.angvel.y += 2.5;
             } else {
                 rat_velocity.angvel.y -= 2.5;
+            }
+
+            if rat_velocity.linvel.length() < 1.0 {
+                rat_velocity.linvel.y += 2.0;
             }
         }
     }
