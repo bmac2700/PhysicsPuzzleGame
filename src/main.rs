@@ -2,6 +2,7 @@ use bevy::{prelude::*, sprite::Material2dPlugin};
 use bevy_rapier3d::prelude::*;
 use components::{
     player::PlayerPlugin,
+    rat::RatPlugin,
     world::{entity_spawner::EntitySpawnPlugin, levels::LevelPlugin},
 };
 use game_states::{
@@ -39,6 +40,7 @@ fn main() {
         .insert_resource(PauseMenuData::default())
         .add_plugin(Material2dPlugin::<PostProcessingMaterial>::default())
         .add_plugin(PlayerPlugin)
+        .add_plugin(RatPlugin)
         .add_plugin(LevelPlugin)
         .add_plugin(EntitySpawnPlugin)
         .add_system(game_states::menu::setup_camera.on_startup())

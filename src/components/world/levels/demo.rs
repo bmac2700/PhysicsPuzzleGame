@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::{
     components::world::{
         entity_spawner::{
-            EntitySpawnEvent, PlayerSpawnData, PostCameraSpawnData, TestCubeSpawnData,
+            EntitySpawnEvent, PlayerSpawnData, PostCameraSpawnData, RatSpawnData, TestCubeSpawnData,
         },
         hitbox_loader::{load_hitboxes, MapCollision},
     },
@@ -52,6 +52,12 @@ pub fn load_world(
 
     entity_spawner.send(EntitySpawnEvent::SpawnTestCube(TestCubeSpawnData {
         location: Vec3::new(25.0, 5.0, -35.0),
+        rotation: Vec3::new(0.0, 0.0, 0.0),
+        size: 5.0,
+    }));
+
+    entity_spawner.send(EntitySpawnEvent::SpawnRat(RatSpawnData {
+        location: Vec3::new(25.0, 7.0, -35.0),
         rotation: Vec3::new(0.0, 0.0, 0.0),
         size: 5.0,
     }));
