@@ -59,6 +59,6 @@ pub fn load_world(
     entity_spawner.send(EntitySpawnEvent::SpawnRat(RatSpawnData {
         location: Vec3::new(25.0, 7.0, -35.0),
         rotation: Vec3::new(0.0, 0.0, 0.0),
-        size: 5.0,
+        size: 1.0,
     }));
 }

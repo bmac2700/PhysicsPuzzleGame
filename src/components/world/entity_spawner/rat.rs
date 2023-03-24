@@ -39,6 +39,7 @@ pub fn handle_rat_spawn(
                 )   )
                 .insert(Damping {
                     angular_damping: 6.0,
+                    linear_damping: 1.0,
                     ..default()
                 })
                 .insert(Velocity::default())
