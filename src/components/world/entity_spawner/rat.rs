@@ -39,7 +39,7 @@ pub fn handle_rat_spawn(
                     ..default()
                 })
                 .insert(Velocity::default())
-                .insert(GravityScale(data.size*6.0))
+                .insert(GravityScale(data.size * 6.0))
                 .insert(PickableObject)
                 .insert(RatMovementBehaviour)
                 .insert(InGameEntity)

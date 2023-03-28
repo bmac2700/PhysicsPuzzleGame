@@ -16,21 +16,27 @@ mod components;
 mod game_states;
 mod keymap_manager;
 mod post_processing;
+use bevy_embedded_assets::EmbeddedAssetPlugin;
 
 #[bevy_main]
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins.set(WindowPlugin {
-            primary_window: Some(Window {
-                title: "Bowens' handyman service".into(),
-                // Tells wasm to resize the window according to the available canvas
-                fit_canvas_to_parent: true,
-                // Tells wasm not to override default event handling, like F5, Ctrl+R etc.
-                prevent_default_event_handling: false,
-                ..default()
-            }),
-            ..default()
-        }))
+        .add_plugins(
+            DefaultPlugins
+                .set(WindowPlugin {
+                    primary_window: Some(Window {
+                        title: "Bowens' handyman service".into(),
+                        // Tells wasm to resize the window according to the available canvas
+                        fit_canvas_to_parent: true,
+                        // Tells wasm not to override default event handling, like F5, Ctrl+R etc.
+                        prevent_default_event_handling: false,
+                        ..default()
+                    }),
+                    ..default()
+                })
+                .build()
+                .add_before::<bevy::asset::AssetPlugin, _>(EmbeddedAssetPlugin),
+        )
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(KeymapPlugin)

@@ -42,7 +42,7 @@ pub fn rat_movement(
             .cast_ray(ray_start, forwardmove, 5.0, true, QueryFilter::new())
             .is_some();
 
-        if in_front || rat_velocity.linvel.length() < 1.0{
+        if in_front || rat_velocity.linvel.length() < 1.0 {
             if rand::random::<bool>() {
                 rat_velocity.angvel.y += 2.5;
             } else {
